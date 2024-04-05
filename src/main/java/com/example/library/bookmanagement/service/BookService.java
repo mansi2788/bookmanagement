@@ -29,7 +29,10 @@ public class BookService {
         return b;
     }
 
-    public List<Book> addAll(@Valid List<Book> bookDetails){
+    public List<Book> addAll(@Valid List<Book> bookDetails) throws Exception {
+        if(bookDetails == null || bookDetails.isEmpty()) {
+            throw new Exception("Book details required");
+        }
         return (List<Book>) bookRepository.saveAll(bookDetails);
     }
 

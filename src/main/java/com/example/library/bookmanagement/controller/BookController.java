@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -77,15 +78,15 @@ public class BookController {
     }
 
     @PostMapping(path ="/book/addallbook")
-    public ResponseEntity<Book> addBooks(@Valid @RequestBody List<Book> bookDetails) throws Exception {
-        /*List<BookDetails> b = bookDetails;
-        Iterator it = b.iterator();
-        while (it.hasNext()) {
-            bookValidator.validate((BookDetails) it.next());
-            bookService.addOne((BookDetails) it.next());
-            it.next();
-        }*/
-        List<Book> b = bookService.addAll(bookDetails);
+    public ResponseEntity<Book> addBooks(@Valid @RequestBody List<BookDetails> bookDetails) throws Exception {
+        List<Book> b = new ArrayList<>();
+        for(BookDetails book: bookDetails){
+            bookValidator.validate(book);
+            Book b1 = bookAdapter.toBookEntity(book);
+            b.add(b1);
+        }
+
+        bookService.addAll(b);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
